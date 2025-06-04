@@ -1,0 +1,1 @@
+export const READING_PER_DAY_OPTIONS = [1, 2, 3];
