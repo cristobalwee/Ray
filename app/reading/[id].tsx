@@ -17,14 +17,42 @@ import Animated, {
   FadeOut, 
   useAnimatedStyle,
   useSharedValue,
-  withTiming
+  withTiming,
+  SlideInDown,
+  SlideOutDown
 } from 'react-native-reanimated';
-import { ArrowLeft, Share2, Minus, Plus } from 'lucide-react-native';
+import { ArrowLeft, Share2, Minus, Plus, Type, Check, Bookmark as BookmarkIcon, Home as HomeIcon } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
+import { TEXT_SIZE_OPTIONS } from '@/utils/data';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import FloatingPill from '@/components/FloatingPill';
+import CompletionCard from '@/components/CompletionCard';
+
+type Reading = {
+  id: string;
+  title: string;
+  author: string;
+  category: string;
+  content: string;
+  imageUrl?: string;
+  readingTime?: number;
+  completed?: boolean;
+  day?: number;
+};
+
+// Utility to get ordinal suffix
+function getOrdinal(n: number) {
+  const s = ["th", "st", "nd", "rd"], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
 export default function ReadingScreen() {
   const router = useRouter();
   const { colors, typography, spacing, borderRadius } = useTheme();
   const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
   const { 
     findReading, 
@@ -32,11 +60,15 @@ export default function ReadingScreen() {
     textSize: globalTextSize,
   } = useReadingContext();
   
-  const reading = findReading(id as string);
+  const reading = findReading(id as string) as Reading | null;
   const [showControls, setShowControls] = useState(true);
   const [textSize, setTextSize] = useState(globalTextSize);
   const scrollRef = useRef<ScrollView>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showTextSizeDropdown, setShowTextSizeDropdown] = useState(false);
+  const [hasCompleted, setHasCompleted] = useState(reading ? reading.completed : false);
+  const [showCompletionCard, setShowCompletionCard] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
   
   const controlsOpacity = useSharedValue(1);
   
@@ -50,6 +82,18 @@ export default function ReadingScreen() {
     
     return () => clearTimeout(hideTimer);
   }, [showControls]);
+  
+  useEffect(() => {
+    const checkBookmarked = async () => {
+      if (!reading) return;
+      const stored = await AsyncStorage.getItem('bookmarks');
+      if (stored) {
+        const arr = JSON.parse(stored);
+        setBookmarked(arr.some((r: any) => r.id === reading.id));
+      }
+    };
+    checkBookmarked();
+  }, [reading?.id]);
   
   const toggleControls = () => {
     if (showControls) {
@@ -72,25 +116,26 @@ export default function ReadingScreen() {
     };
   });
   
-  const handleScroll = (event) => {
+  const handleScroll = (event: any) => {
+    if (!reading) return;
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const progress = contentOffset.y / (contentSize.height - layoutMeasurement.height);
     setScrollProgress(Math.min(Math.max(progress, 0), 1));
+    // Auto-complete logic
+    if (!hasCompleted && progress > 0.98) {
+      setHasCompleted(true);
+      markReadingAsCompleted(reading.id);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setTimeout(() => setShowCompletionCard(true), 400); // allow pill to animate out first
+    }
   };
   
   const handleBack = () => {
     router.back();
   };
   
-  const handleIncreaseTextSize = () => {
-    setTextSize(prev => Math.min(prev + 0.1, 1.5));
-  };
-  
-  const handleDecreaseTextSize = () => {
-    setTextSize(prev => Math.max(prev - 0.1, 0.8));
-  };
-  
   const handleShare = async () => {
+    if (!reading) return;
     try {
       await Share.share({
         message: `I'm reading "${reading.title}" by ${reading.author} in the Ray app.`,
@@ -99,10 +144,22 @@ export default function ReadingScreen() {
       console.error(error);
     }
   };
-  
-  const handleComplete = () => {
-    markReadingAsCompleted(reading.id);
-    router.back();
+
+  const toggleBookmark = async () => {
+    if (!reading) return;
+    const stored = await AsyncStorage.getItem('bookmarks');
+    let arr = stored ? JSON.parse(stored) : [];
+    if (bookmarked) {
+      arr = arr.filter((r: any) => r.id !== reading.id);
+      await AsyncStorage.setItem('bookmarks', JSON.stringify(arr));
+      setBookmarked(false);
+      Toast.show({ type: 'success', text1: 'Removed from bookmarks.' });
+    } else {
+      arr.push({ id: reading.id, title: reading.title, author: reading.author, imageUrl: reading.imageUrl });
+      await AsyncStorage.setItem('bookmarks', JSON.stringify(arr));
+      setBookmarked(true);
+      Toast.show({ type: 'success', text1: 'Bookmarked!' });
+    }
   };
 
   if (!reading) {
@@ -118,144 +175,55 @@ export default function ReadingScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Top left floating back button */}
+      <View style={{ position: 'absolute', top: insets.top, left: 16, zIndex: 10 }}>
+        <TouchableOpacity
+          style={{ backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.pill, padding: spacing.sm, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 8, elevation: 5 }}
+          onPress={handleBack}
+        >
+          <ArrowLeft size={24} color={colors.text} />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         ref={scrollRef}
         style={styles.scrollView}
-        contentContainerStyle={[
-          styles.contentContainer, 
-          { paddingTop: height * 0.08, paddingBottom: height * 0.12 }
-        ]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + 96, paddingBottom: insets.bottom + 64 }]}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
         scrollEnabled={true}
         bounces={true}
       >
-        <TouchableOpacity 
-          activeOpacity={1}
-          onPress={toggleControls}
-          style={styles.contentWrapper}
-        >
-          <Animated.View entering={FadeIn.duration(800)}>
-            <Text style={[styles.title, { 
-              color: colors.text,
-              ...typography.title,
-              marginBottom: spacing.md,
-              fontSize: 28 * textSize,
-            }]}>
-              {reading.title}
-            </Text>
-            
-            <Text style={[styles.author, { 
-              color: colors.textSecondary,
-              ...typography.subheading,
-              marginBottom: spacing.xl,
-            }]}>
-              by {reading.author}
-            </Text>
-            
-            <Text style={[styles.content, { 
-              color: colors.text,
-              ...typography.body,
-              fontSize: 16 * textSize,
-              lineHeight: 28 * textSize,
-            }]}>
-              {reading.content}
-            </Text>
-            
-            {reading.completed ? null : (
-              <View style={[styles.completeContainer, { marginTop: spacing.xxl }]}>
-                <TouchableOpacity
-                  style={[styles.completeButton, { 
-                    backgroundColor: colors.primary,
-                    borderRadius: borderRadius.md,
-                    paddingVertical: spacing.md,
-                    paddingHorizontal: spacing.xl,
-                  }]}
-                  onPress={handleComplete}
-                >
-                  <Text style={[styles.completeButtonText, { 
-                    color: colors.background,
-                    ...typography.button,
-                  }]}>
-                    Mark as Completed
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </Animated.View>
-        </TouchableOpacity>
+        <View style={styles.contentWrapper}>
+          <Text style={[styles.title, { color: colors.text, ...typography.title, fontSize: 28 * textSize }]}> {reading.title} </Text>
+          <Text style={[styles.author, { color: colors.textSecondary, ...typography.subheading, marginBottom: spacing.xl }]}>by {reading.author}</Text>
+          <Text style={[styles.content, { color: colors.text, ...typography.body, fontSize: 16 * textSize, lineHeight: 28 * textSize }]}>{reading.content}</Text>
+          {showCompletionCard && (
+            <CompletionCard
+              reading={reading}
+              colors={colors}
+              typography={typography}
+              router={router}
+              bookmarked={bookmarked}
+              toggleBookmark={toggleBookmark}
+              borderRadius={borderRadius}
+            />
+          )}
+        </View>
       </ScrollView>
-
-      <Animated.View 
-        style={[styles.header, animatedHeaderStyle]}
-        pointerEvents={showControls ? 'auto' : 'none'}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, { 
-            backgroundColor: colors.surfaceElevated,
-            borderRadius: borderRadius.pill,
-            padding: spacing.sm,
-          }]}
-          onPress={handleBack}
-        >
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        
-        <View style={styles.textControls}>
-          <TouchableOpacity
-            style={[styles.textSizeButton, { 
-              backgroundColor: colors.surfaceElevated,
-              borderRadius: borderRadius.pill,
-              padding: spacing.sm,
-              marginLeft: spacing.sm,
-            }]}
-            onPress={handleDecreaseTextSize}
-          >
-            <Minus size={20} color={colors.text} />
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={[styles.textSizeButton, { 
-              backgroundColor: colors.surfaceElevated,
-              borderRadius: borderRadius.pill,
-              padding: spacing.sm,
-              marginLeft: spacing.sm,
-            }]}
-            onPress={handleIncreaseTextSize}
-          >
-            <Plus size={20} color={colors.text} />
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={[styles.shareButton, { 
-              backgroundColor: colors.surfaceElevated,
-              borderRadius: borderRadius.pill,
-              padding: spacing.sm,
-              marginLeft: spacing.sm,
-            }]}
-            onPress={handleShare}
-          >
-            <Share2 size={20} color={colors.text} />
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
-      
-      <Animated.View 
-        style={[styles.footer, animatedFooterStyle]}
-        pointerEvents={showControls ? 'auto' : 'none'}
-      >
-        <View style={[styles.progressBarContainer, { 
-          backgroundColor: colors.surfaceElevated,
-          borderRadius: borderRadius.pill,
-        }]}>
-          <View style={[styles.progressBar, { 
-            backgroundColor: colors.primary,
-            borderRadius: borderRadius.pill,
-            width: `${scrollProgress * 100}%`,
-          }]} />
-        </View>
-      </Animated.View>
+      {!showCompletionCard && (
+        <FloatingPill
+          colors={colors}
+          typography={typography}
+          borderRadius={borderRadius}
+          scrollProgress={scrollProgress}
+          textSize={textSize}
+          setTextSize={setTextSize}
+          showTextSizeDropdown={showTextSizeDropdown}
+          setShowTextSizeDropdown={setShowTextSizeDropdown}
+          spacing={spacing}
+        />
+      )}
     </View>
   );
 }
@@ -268,7 +236,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 36,
   },
   contentWrapper: {
     flex: 1,

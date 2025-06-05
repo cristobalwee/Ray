@@ -7,9 +7,23 @@ import { TodayReadingCard } from '@/components/TodayReadingCard';
 import { PreviousReadingItem } from '@/components/PreviousReadingItem';
 import { formatDate } from '@/utils/helpers';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
-import { Book, Settings } from 'lucide-react-native';
+import { Book, Settings, Bookmark } from 'lucide-react-native';
+import { type FC } from 'react';
 
-export default function HomeScreen() {
+// Reading type matches the shape from ReadingProvider and utils/data
+type Reading = {
+  id: string;
+  title: string;
+  author: string;
+  category: string;
+  content: string;
+  imageUrl?: string;
+  readingTime?: number;
+  completed?: boolean;
+  day?: number;
+};
+
+const HomeScreen: FC = () => {
   const router = useRouter();
   const { colors, typography, spacing, borderRadius } = useTheme();
   const { 
@@ -17,14 +31,23 @@ export default function HomeScreen() {
     totalDays,
     todaysReadings,
     previousReadings,
+  }: {
+    currentDay: number;
+    totalDays: number;
+    todaysReadings: Reading[];
+    previousReadings: Reading[];
   } = useReadingContext();
 
   const navigateToReading = (readingId: string) => {
-    router.push(`/reading/${readingId}`);
+    router.push(`/reading/detail/${readingId}`);
   };
 
   const navigateToSettings = () => {
     router.push('/settings');
+  };
+
+  const navigateToBookmarks = () => {
+    router.push({ pathname: '/bookmarks' });
   };
 
   return (
@@ -41,9 +64,14 @@ export default function HomeScreen() {
             <Text style={[styles.appTitle, { color: colors.primary, ...typography.title }]}>
               Ray
             </Text>
-            <TouchableOpacity onPress={navigateToSettings}>
-              <Settings size={24} color={colors.text} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+              <TouchableOpacity onPress={navigateToBookmarks} style={{ marginRight: 12 }}>
+                <Bookmark size={24} color={colors.text} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={navigateToSettings}>
+                <Settings size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
           </View>
           <Text style={[styles.subhead, { color: colors.textSecondary, ...typography.subheading }]}>
             Let's get into it
@@ -144,7 +172,7 @@ export default function HomeScreen() {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -201,3 +229,5 @@ const styles = StyleSheet.create({
     maxWidth: 200,
   },
 });
+
+export default HomeScreen;
