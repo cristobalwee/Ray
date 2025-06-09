@@ -18,7 +18,7 @@
     "@react-native-community/viewpager": "^5.0.11",
     "@react-navigation/native": "^7.0.14",
     "date-fns": "^3.3.1",
-    "expo": "53.0.10",
+    "expo": "53.0.11",
     "expo-blur": "~14.1.5",
     "expo-camera": "~16.1.7",
     "expo-constants": "~17.1.6",

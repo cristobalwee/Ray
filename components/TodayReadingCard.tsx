@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from '@/components/ThemeProvider';
-import { Check, Clock, ChevronRight } from 'lucide-react-native';
+import { Check, Clock, ChevronRight, Space } from 'lucide-react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 export const TodayReadingCard = ({ reading, onPress }) => {
@@ -18,19 +18,37 @@ export const TodayReadingCard = ({ reading, onPress }) => {
         borderRadius: borderRadius.lg,
         shadowColor: colors.text,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
+        shadowOpacity: 0.2,
         shadowRadius: 8,
         elevation: 5,
       }]}>
         <View style={styles.imageContainer}>
           <Image 
             source={{ uri: reading.imageUrl }} 
-            style={[styles.image, { borderRadius: borderRadius.md }]} 
+            style={[styles.image, { opacity: 0.3 }]} 
             resizeMode="cover" 
           />
         </View>
         
-        <View style={styles.metaContainer}>
+        <View style={[styles.metaContainer, reading.completed && { opacity: 0.6 }]}>
+          <View style={styles.titleContainer}>
+            <Text style={[styles.title, {
+              color: colors.text,
+              ...typography.heading,
+            }]} numberOfLines={2}>
+              {reading.title}
+            </Text>
+            <Text style={[styles.author, {
+              color: colors.textSecondary,
+              ...typography.caption,
+            }]}>
+              by {reading.author}
+            </Text>
+          </View>
+          
+          <View style={styles.actionContainer}>
+            <ChevronRight size={20} color={colors.textSecondary} />
+          </View>
           <View style={styles.tagsContainer}>
             <View style={[styles.categoryTag, { 
               backgroundColor: colors.accent,
@@ -64,30 +82,12 @@ export const TodayReadingCard = ({ reading, onPress }) => {
               </Text>
             </View>
           </View>
-          
-          <View style={styles.titleContainer}>
-            <Text style={[styles.title, {
-              color: colors.text,
-              ...typography.subheading,
-            }]} numberOfLines={2}>
-              {reading.title}
-            </Text>
-            <Text style={[styles.author, {
-              color: colors.textSecondary,
-              ...typography.caption,
-            }]}>
-              by {reading.author}
-            </Text>
-          </View>
-          
-          <View style={styles.actionContainer}>
-            <ChevronRight size={20} color={colors.textSecondary} />
-          </View>
         </View>
+        
         
         {reading.completed && (
           <View style={[styles.completedOverlay, {
-            backgroundColor: 'rgba(18, 18, 18, 0.75)',
+            backgroundColor: 'rgba(58, 58, 58, 0.75)',
             borderRadius: borderRadius.lg,
           }]}>
             <Animated.View
@@ -95,35 +95,42 @@ export const TodayReadingCard = ({ reading, onPress }) => {
               style={styles.completedContent}
             >
               <View style={[styles.checkContainer, {
-                backgroundColor: colors.success,
+                backgroundColor: colors.primary,
                 borderRadius: 999,
-                padding: 8,
-                marginBottom: 8,
+                padding: spacing.md,
+                marginBottom: 16,
               }]}>
-                <Check size={24} color={colors.background} />
+                <Check size={24} color={colors.text} />
               </View>
               <Text style={[styles.completedText, {
                 color: colors.text,
-                ...typography.subheading,
-                marginBottom: 20,
+                marginBottom: 4,
+                ...typography.heading,
               }]}>
                 Completed
+              </Text>
+              <Text style={[styles.completedText, {
+                color: colors.text,
+                ...typography.caption,
+                marginBottom: 20,
+              }]}>
+                You’re done with your reading today.
               </Text>
               
               <TouchableOpacity
                 style={[styles.reReadButton, {
                   backgroundColor: colors.primary,
-                  borderRadius: borderRadius.md,
-                  paddingVertical: spacing.sm,
+                  borderRadius: borderRadius.sm,
+                  paddingVertical: spacing.md,
                   paddingHorizontal: spacing.lg,
                 }]}
                 onPress={onPress}
               >
                 <Text style={[styles.reReadText, {
-                  color: colors.background,
+                  color: colors.text,
                   ...typography.button,
                 }]}>
-                  Re-read
+                  View again
                 </Text>
               </TouchableOpacity>
             </Animated.View>
@@ -140,9 +147,10 @@ const styles = StyleSheet.create({
   },
   card: {
     overflow: 'hidden',
+    marginHorizontal: 40
   },
   imageContainer: {
-    height: 160,
+    height: 200,
     width: '100%',
   },
   image: {
@@ -150,11 +158,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   metaContainer: {
-    padding: 16,
+    padding: 24,
+    gap: 16
   },
   tagsContainer: {
     flexDirection: 'row',
-    marginBottom: 12,
   },
   categoryTag: {},
   categoryText: {},
@@ -183,9 +191,14 @@ const styles = StyleSheet.create({
   },
   completedContent: {
     alignItems: 'center',
+    padding: 24
   },
   checkContainer: {},
-  completedText: {},
-  reReadButton: {},
+  completedText: {
+    textAlign: 'center',
+  },
+  reReadButton: {
+
+  },
   reReadText: {},
 });

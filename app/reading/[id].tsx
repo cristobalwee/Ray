@@ -195,9 +195,9 @@ export default function ReadingScreen() {
         bounces={true}
       >
         <View style={styles.contentWrapper}>
-          <Text style={[styles.title, { color: colors.text, ...typography.title, fontSize: 28 * textSize }]}> {reading.title} </Text>
-          <Text style={[styles.author, { color: colors.textSecondary, ...typography.subheading, marginBottom: spacing.xl }]}>by {reading.author}</Text>
-          <Text style={[styles.content, { color: colors.text, ...typography.body, fontSize: 16 * textSize, lineHeight: 28 * textSize }]}>{reading.content}</Text>
+          <Text style={[styles.title, { color: colors.text, ...typography.title, fontSize: 32 * textSize, lineHeight: 36 * textSize }]}> {reading.title} </Text>
+          <Text style={[styles.author, { color: colors.textSecondary, ...typography.subheading, marginBottom: spacing.xl, fontSize: 22 * textSize, lineHeight: 24 * textSize }]}>by {reading.author}</Text>
+          <Text style={[styles.content, { color: colors.text, ...typography.body, fontSize: 22 * textSize, lineHeight: 24 * textSize }]}>{reading.content}</Text>
           {showCompletionCard && (
             <CompletionCard
               reading={reading}
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 36,
+    paddingHorizontal: 24,
   },
   contentWrapper: {
     flex: 1,

@@ -61,8 +61,8 @@ const HomeScreen: FC = () => {
           style={styles.header}
         >
           <View style={styles.headerContent}>
-            <Text style={[styles.appTitle, { color: colors.primary, ...typography.title }]}>
-              Ray
+            <Text style={[typography.title, styles.appTitle, { color: colors.text }]}>
+              Ray<Text style={{ color: '#C6698B' }}>.</Text>
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
               <TouchableOpacity onPress={navigateToBookmarks} style={{ marginRight: 12 }}>
@@ -73,26 +73,28 @@ const HomeScreen: FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <Text style={[styles.subhead, { color: colors.textSecondary, ...typography.subheading }]}>
-            Let's get into it
-          </Text>
         </Animated.View>
 
-        <Animated.View 
+        <Animated.View
           entering={FadeInUp.delay(300).duration(600)}
           style={styles.dateSection}
         >
-          <Text style={[styles.dateText, { color: colors.text, ...typography.heading }]}>
-            {formatDate(new Date())}
-          </Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+            <Text style={{ color: colors.textSecondary, ...typography.body }}>
+              Let's dive in.
+            </Text>
+            <Text style={[styles.dateText, { color: colors.text, ...typography.title }]}>
+              {formatDate(new Date())}
+            </Text>
+          </View>
           <View style={[styles.dayPill, { 
             backgroundColor: colors.surfaceElevated,
-            borderRadius: 999,
-            paddingVertical: spacing.xs,
-            paddingHorizontal: spacing.md,
+            borderRadius: 8,
+            paddingVertical: spacing.md,
+            paddingHorizontal: spacing.lg,
           }]}>
             <Text style={[styles.dayText, { 
-              color: colors.primary,
+              color: colors.text,
               ...typography.caption
             }]}>
               Day {currentDay} / {totalDays}
@@ -141,19 +143,20 @@ const HomeScreen: FC = () => {
               entering={FadeInUp.delay(1000).duration(600)}
               style={[styles.emptyState, {
                 backgroundColor: colors.surfaceElevated,
-                borderRadius: borderRadius.lg,
+                borderRadius: borderRadius.md,
                 padding: spacing.xl,
+                gap: spacing.sm
               }]}
             >
               <View style={[styles.iconCircle, {
-                backgroundColor: colors.surface,
+                backgroundColor: colors.cardAction,
                 borderRadius: 999,
               }]}>
-                <Book size={32} color={colors.primary} />
+                <Book size={32} color={colors.text} />
               </View>
               <Text style={[styles.emptyTitle, {
                 color: colors.text,
-                ...typography.subheading,
+                ...typography.heading,
                 marginTop: spacing.lg,
                 marginBottom: spacing.xs,
               }]}>
@@ -190,18 +193,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 36,
   },
   appTitle: {
-    marginBottom: 4,
-  },
-  subhead: {
-    marginBottom: 24,
+    fontSize: 24
   },
   dateSection: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 16,
     marginBottom: 24,
   },
   dateText: {},

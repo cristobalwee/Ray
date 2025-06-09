@@ -31,6 +31,10 @@ export default function RootLayout() {
     'Merriweather-Regular': Merriweather_400Regular,
     'Merriweather-Bold': Merriweather_700Bold,
     'Merriweather-Italic': Merriweather_400Regular_Italic,
+    'MartinaPlantijn-Black': require('../assets/fonts/MartinaPlantijn-Black.ttf'),
+    'Metric-Light': require('../assets/fonts/Metric-Light.ttf'),
+    'Metric-Regular': require('../assets/fonts/Metric-Regular.ttf'),
+    'Metric-Medium': require('../assets/fonts/Metric-Medium.ttf'),
   });
 
   // Hide splash screen once fonts are loaded

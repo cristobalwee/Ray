@@ -1,15 +1,16 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 
 // Theme colors
 const darkTheme = {
   colors: {
-    background: '#121212',
+    background: '#151515',
     surface: '#1E1E1E',
-    surfaceElevated: '#2A2A2A',
-    primary: '#A0D7E7',
+    surfaceElevated: '#232323',
+    primary: '#222222',
     secondary: '#6C757D',
     accent: '#E6A285',
+    cardAction: '#313131',
     text: '#F5F5F5',
     textSecondary: '#BBBBBB',
     textTertiary: '#888888',
@@ -28,50 +29,50 @@ const darkTheme = {
   },
   typography: {
     title: {
-      fontFamily: 'Merriweather-Bold',
-      fontSize: 28,
+      fontFamily: 'MartinaPlantijn-Black',
+      fontSize: 32,
       lineHeight: 36,
     },
     heading: {
-      fontFamily: 'Merriweather-Bold',
+      fontFamily: 'MartinaPlantijn-Black',
       fontSize: 22,
       lineHeight: 28,
     },
     subheading: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: 'Metric-Medium',
       fontSize: 18,
-      lineHeight: 24,
+      lineHeight: 22,
     },
     body: {
-      fontFamily: 'Merriweather-Regular',
-      fontSize: 16,
+      fontFamily: 'Metric-Light',
+      fontSize: 20,
       lineHeight: 24,
     },
     bodySmall: {
-      fontFamily: 'Merriweather-Regular',
-      fontSize: 14,
+      fontFamily: 'Metric-Light',
+      fontSize: 18,
       lineHeight: 20,
     },
     caption: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: 'Metric-Light',
+      fontSize: 16,
       lineHeight: 16,
     },
     button: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: 'Metric-Medium',
       fontSize: 16,
       lineHeight: 20,
     },
     tag: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 12,
+      fontFamily: 'Metric-Regular',
+      fontSize: 14,
       lineHeight: 16,
     },
   },
   borderRadius: {
-    sm: 4,
-    md: 8,
-    lg: 12,
+    sm: 8,
+    md: 12,
+    lg: 24,
     xl: 16,
     pill: 999,
   },
@@ -81,7 +82,7 @@ const darkTheme = {
 const ThemeContext = createContext(darkTheme);
 
 // Provider component
-export const ThemeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   // Force dark mode
   const colorScheme = 'dark';
   
