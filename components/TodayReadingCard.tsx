@@ -16,11 +16,7 @@ export const TodayReadingCard = ({ reading, onPress }) => {
       <View style={[styles.card, { 
         backgroundColor: colors.surfaceElevated,
         borderRadius: borderRadius.lg,
-        shadowColor: colors.text,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-        elevation: 5,
+        filter: 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.15))'
       }]}>
         <View style={styles.imageContainer}>
           <Image 
@@ -44,10 +40,6 @@ export const TodayReadingCard = ({ reading, onPress }) => {
             }]}>
               by {reading.author}
             </Text>
-          </View>
-          
-          <View style={styles.actionContainer}>
-            <ChevronRight size={20} color={colors.textSecondary} />
           </View>
           <View style={styles.tagsContainer}>
             <View style={[styles.categoryTag, { 
@@ -143,15 +135,18 @@ export const TodayReadingCard = ({ reading, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 12,
+    marginTop: 12,
+    marginBottom: 24
   },
   card: {
     overflow: 'hidden',
     marginHorizontal: 40
   },
   imageContainer: {
-    height: 200,
-    width: '100%',
+    height: 140,
+    width: '80%',
+    alignSelf: 'center',
+    marginTop: 24
   },
   image: {
     height: '100%',

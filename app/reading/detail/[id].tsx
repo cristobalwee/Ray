@@ -89,8 +89,8 @@ export default function ReadingDetailScreen() {
           <Image source={{ uri: reading.imageUrl }} style={styles.banner} />
         )}
         <View style={styles.contentWrapper}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-            <Text style={[styles.title, { color: colors.text, ...typography.title, marginRight: 8 }]}>{reading.title}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
+            <Text style={[styles.title, { color: colors.text, ...typography.title, marginRight: 8, maxWidth: '80%' }]}>{reading.title}</Text>
             <TouchableOpacity onPress={toggleBookmark} accessibilityLabel={bookmarked ? 'Remove Bookmark' : 'Add Bookmark'}>
               <Bookmark size={28} color={bookmarked ? colors.primary : colors.textSecondary} fill={bookmarked ? colors.primary : 'none'} />
             </TouchableOpacity>
@@ -103,9 +103,12 @@ export default function ReadingDetailScreen() {
             style={[styles.ctaButton, { backgroundColor: colors.primary, borderRadius: borderRadius.md }]}
             onPress={() => router.push(`/reading/${reading.id}`)}
           >
-            <Text style={[styles.ctaText, { color: colors.background, ...typography.button }]}>Read Now</Text>
+            <Text style={[styles.ctaText, { color: colors.text, ...typography.button }]}>Read Now</Text>
           </TouchableOpacity>
-          <Text style={[styles.summary, { color: colors.text, ...typography.body, marginTop: spacing.lg }]}>{summary}</Text>
+          <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: spacing.md, gap: spacing.md }}>
+            <Text style={[styles.summary, { color: colors.text, ...typography.subheading }]}>Summary</Text>
+            <Text style={[styles.summary, { color: colors.text, ...typography.body }]}>{summary}</Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -127,6 +130,7 @@ const styles = StyleSheet.create({
   contentWrapper: {
     paddingHorizontal: 24,
     paddingTop: 24,
+    gap: 16
   },
   title: {
     fontSize: 28,

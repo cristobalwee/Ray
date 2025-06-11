@@ -38,7 +38,7 @@ export default function FloatingPill({
         <View style={{ flexDirection: 'column', alignItems: 'flex-start', marginRight: 16, gap: 4}}>
           <Text style={{ color: colors.textSecondary, ...typography.caption }}>{`${Math.round(scrollProgress * 100)}% Completed`}</Text>
           <View style={{ width: 80, height: 8, backgroundColor: colors.surface, borderRadius: 4, marginRight: 8, overflow: 'hidden' }}>
-            <View style={{ width: `${Math.round(scrollProgress * 100)}%`, height: 8, backgroundColor: colors.primary, borderRadius: 4 }} />
+            <View style={{ width: `${Math.round(scrollProgress * 100)}%`, height: 8, backgroundColor: colors.text, borderRadius: 4 }} />
           </View>
         </View>
         {/* Text size button */}
