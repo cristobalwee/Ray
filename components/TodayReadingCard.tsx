@@ -70,7 +70,7 @@ export const TodayReadingCard = ({ reading, onPress }) => {
                 color: colors.text,
                 ...typography.tag,
               }]}>
-                ~{reading.readingTime} min
+                {reading.readingTime} min
               </Text>
             </View>
           </View>

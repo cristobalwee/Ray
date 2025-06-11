@@ -89,15 +89,22 @@ export default function ReadingDetailScreen() {
           <Image source={{ uri: reading.imageUrl }} style={styles.banner} />
         )}
         <View style={styles.contentWrapper}>
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
-            <Text style={[styles.title, { color: colors.text, ...typography.title, marginRight: 8, maxWidth: '80%' }]}>{reading.title}</Text>
-            <TouchableOpacity onPress={toggleBookmark} accessibilityLabel={bookmarked ? 'Remove Bookmark' : 'Add Bookmark'}>
-              <Bookmark size={28} color={bookmarked ? colors.primary : colors.textSecondary} fill={bookmarked ? colors.primary : 'none'} />
-            </TouchableOpacity>
-          </View>
-          <Text style={[styles.author, { color: colors.textSecondary, ...typography.subheading, marginBottom: spacing.sm }]}>by {reading.author}</Text>
-          <View style={[styles.tag, { backgroundColor: colors.accent, borderRadius: borderRadius.pill }]}> 
-            <Text style={[styles.tagText, { color: colors.background, ...typography.tag }]}>{reading.category}</Text>
+          <View style={{ gap: 12, flexDirection: 'column' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: spacing.sm }}>
+              <Text style={[styles.title, { color: colors.text, ...typography.title, maxWidth: '80%' }]}>{reading.title}</Text>
+              <TouchableOpacity onPress={toggleBookmark} accessibilityLabel={bookmarked ? 'Remove Bookmark' : 'Add Bookmark'}>
+                <Bookmark size={28} color={colors.textSecondary} fill={bookmarked ? colors.textSecondary : 'none'} />
+              </TouchableOpacity>
+            </View>
+            <Text style={[styles.author, { color: colors.textSecondary, ...typography.body}]}>by {reading.author}</Text>
+            <View style={styles.tagContainer}>
+              <View style={[styles.tag, { backgroundColor: colors.accent, borderRadius: borderRadius.pill }]}> 
+                <Text style={[styles.tagText, { color: colors.background, ...typography.tag }]}>{reading.category}</Text>
+              </View>
+              <View style={[styles.tag, { backgroundColor: colors.surface, borderRadius: borderRadius.pill }]}> 
+                <Text style={[styles.tagText, { color: colors.text, ...typography.tag }]}>{reading.readingTime} min</Text>
+              </View>
+            </View>
           </View>
           <TouchableOpacity
             style={[styles.ctaButton, { backgroundColor: colors.primary, borderRadius: borderRadius.md }]}
@@ -105,7 +112,7 @@ export default function ReadingDetailScreen() {
           >
             <Text style={[styles.ctaText, { color: colors.text, ...typography.button }]}>Read Now</Text>
           </TouchableOpacity>
-          <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: spacing.md, gap: spacing.md }}>
+          <View style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', gap: spacing.md }}>
             <Text style={[styles.summary, { color: colors.text, ...typography.subheading }]}>Summary</Text>
             <Text style={[styles.summary, { color: colors.text, ...typography.body }]}>{summary}</Text>
           </View>
@@ -135,17 +142,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 8,
   },
   author: {
     fontSize: 16,
-    marginBottom: 8,
+    marginTop: -8
+  },
+  tagContainer: {
+    flexDirection: 'row',
+    gap: 8
   },
   tag: {
     alignSelf: 'flex-start',
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    marginBottom: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   tagText: {
     fontSize: 12,
