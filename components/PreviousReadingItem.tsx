@@ -22,60 +22,45 @@ export const PreviousReadingItem = ({ reading, onPress }) => {
       activeOpacity={0.7}
     >
       <View style={styles.innerContainer}>
-        <Image 
-          source={{ uri: reading.imageUrl }} 
-          style={[styles.thumbnail, { 
-            borderRadius: borderRadius.sm,
-            backgroundColor: colors.surfaceElevated,
-          }]} 
-          resizeMode="cover" 
-        />
+        <View style={styles.thumbnailContainer}>
+          <Image 
+            source={{ uri: reading.imageUrl }} 
+            style={[styles.thumbnail, { 
+              borderRadius: 4,
+              backgroundColor: colors.surfaceElevated,
+            }]} 
+            resizeMode="cover" 
+          />
+          <View style={styles.completedIndicator}>
+            <View style={{
+              backgroundColor: colors.surfaceElevated,
+              borderRadius: borderRadius.pill,
+              padding: spacing.sm,
+            }}>
+              <Check size={12} color={colors.text} />
+            </View>
+          </View>
+        </View>
         
-        <View style={styles.contentContainer}>
-          <Text style={[styles.title, {
-            color: colors.text,
-            ...typography.bodySmall,
-          }]} numberOfLines={2}>
-            {reading.title}
-          </Text>
-          
+        <View style={styles.contentContainer}>          
           <View style={styles.metaContainer}>
             <Text style={[styles.date, {
               color: colors.textSecondary,
               ...typography.caption,
             }]}>
-              {formatDate(completedDate, 'short')}
+              {formatDate(completedDate)}
             </Text>
-            
-            <View style={[styles.categoryTag, { 
-              backgroundColor: colors.accent,
-              borderRadius: borderRadius.pill,
-              paddingVertical: 2,
-              paddingHorizontal: 8,
-            }]}>
-              <Text style={[styles.categoryText, {
-                color: colors.background,
-                ...typography.tag,
-                fontSize: 10,
-              }]}>
-                {reading.category}
-              </Text>
-            </View>
+            <Text style={[styles.title, {
+              color: colors.text,
+              ...typography.headingSmall
+            }]} numberOfLines={2}>
+              {reading.title}
+            </Text>
           </View>
         </View>
         
         <View style={styles.rightContainer}>
-          {reading.completed ? (
-            <View style={[styles.completedIndicator, {
-              backgroundColor: colors.success,
-              borderRadius: 999,
-              padding: 2,
-            }]}>
-              <Check size={12} color={colors.background} />
-            </View>
-          ) : (
-            <ChevronRight size={18} color={colors.textSecondary} />
-          )}
+          <ChevronRight size={20} color={colors.text} />
         </View>
       </View>
     </TouchableOpacity>
@@ -84,27 +69,33 @@ export const PreviousReadingItem = ({ reading, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    padding: 16,
     marginBottom: 12,
   },
   innerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8
   },
   thumbnail: {
     width: 48,
-    height: 48,
+    height: 64,
     marginRight: 12,
   },
   contentContainer: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   title: {
     marginBottom: 4,
   },
   metaContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    gap: 8
   },
   date: {
     marginRight: 8,
@@ -112,7 +103,26 @@ const styles = StyleSheet.create({
   categoryTag: {},
   categoryText: {},
   rightContainer: {
-    padding: 8,
+    flexDirection: 'row',
+    padding: 4,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
-  completedIndicator: {},
+  thumbnailContainer: {
+    position: 'relative',
+    width: 48,
+    height: 64,
+    marginRight: 12,
+  },
+  completedIndicator: {
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

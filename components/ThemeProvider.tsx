@@ -9,6 +9,7 @@ const darkTheme = {
     surfaceElevated: '#232323',
     primary: '#222222',
     secondary: '#6C757D',
+    brand: '#C6698B',
     accent: '#E6A285',
     cardAction: '#313131',
     text: '#F5F5F5',
@@ -31,12 +32,17 @@ const darkTheme = {
     title: {
       fontFamily: 'MartinaPlantijn-Black',
       fontSize: 32,
-      lineHeight: 36,
+      lineHeight: 38,
     },
     heading: {
       fontFamily: 'MartinaPlantijn-Black',
       fontSize: 22,
       lineHeight: 28,
+    },
+    headingSmall: {
+      fontFamily: 'MartinaPlantijn-Black',
+      fontSize: 18,
+      lineHeight: 22,
     },
     subheading: {
       fontFamily: 'Metric-Medium',
@@ -96,3 +102,5 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
 // Hook to use the theme context
 export const useTheme = () => useContext(ThemeContext);
+
+export { darkTheme };

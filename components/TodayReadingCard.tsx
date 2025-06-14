@@ -79,7 +79,7 @@ export const TodayReadingCard = ({ reading, onPress }) => {
         
         {reading.completed && (
           <View style={[styles.completedOverlay, {
-            backgroundColor: 'rgba(58, 58, 58, 0.75)',
+            backgroundColor: 'rgba(48, 48, 48, 0.9)',
             borderRadius: borderRadius.lg,
           }]}>
             <Animated.View

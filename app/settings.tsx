@@ -96,7 +96,7 @@ export default function SettingsScreen() {
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
-              trackColor={{ false: colors.border, true: colors.primary }}
+              trackColor={{ false: colors.cardAction, true: colors.brand }}
               thumbColor={colors.text}
             />
           </View>
@@ -150,115 +150,6 @@ export default function SettingsScreen() {
             </View>
           )}
         </Animated.View>
-
-        <Animated.View 
-          entering={FadeIn.delay(400).duration(600)} 
-          style={styles.section}
-        >
-          <Text style={[styles.sectionTitle, { 
-            color: colors.text,
-            ...typography.heading,
-            marginBottom: spacing.md
-          }]}>
-            Reading Preferences
-          </Text>
-          
-          <View style={[styles.settingRow, {
-            backgroundColor: colors.surfaceElevated,
-            borderRadius: borderRadius.md,
-            padding: spacing.md,
-            marginBottom: spacing.md,
-          }]}>
-            <View style={styles.settingTextContainer}>
-              <Text style={[styles.settingTitle, { 
-                color: colors.text,
-                ...typography.subheading,
-              }]}>
-                Readings Per Day
-              </Text>
-            </View>
-            <View style={styles.countSelector}>
-              {READING_PER_DAY_OPTIONS.map((count) => (
-                <TouchableOpacity
-                  key={count}
-                  style={[
-                    styles.countOption,
-                    { 
-                      backgroundColor: readingsPerDay === count 
-                        ? colors.primary 
-                        : colors.surface,
-                      borderRadius: borderRadius.md,
-                      marginLeft: spacing.xs,
-                    }
-                  ]}
-                  onPress={() => setReadingsPerDay(count)}
-                >
-                  <Text style={[
-                    styles.countText,
-                    { 
-                      color: readingsPerDay === count 
-                        ? colors.background 
-                        : colors.text,
-                      ...typography.tag
-                    }
-                  ]}>
-                    {count}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <View style={[styles.settingRow, {
-            backgroundColor: colors.surfaceElevated,
-            borderRadius: borderRadius.md,
-            padding: spacing.md,
-            marginBottom: spacing.md,
-            alignItems: 'flex-start',
-          }]}>
-            <View style={styles.settingTextContainer}>
-              <Text style={[styles.settingTitle, { 
-                color: colors.text,
-                ...typography.subheading,
-                marginBottom: spacing.sm,
-              }]}>
-                Content Categories
-              </Text>
-            </View>
-            <View style={styles.categoriesContainer}>
-              {CATEGORIES.map((category) => (
-                <TouchableOpacity
-                  key={category}
-                  style={[
-                    styles.categoryChip,
-                    { 
-                      backgroundColor: selectedCategories.includes(category) 
-                        ? colors.primary 
-                        : colors.surface,
-                      borderRadius: borderRadius.pill,
-                      marginBottom: spacing.xs,
-                      marginLeft: spacing.xs,
-                    }
-                  ]}
-                  onPress={() => handleCategoryToggle(category)}
-                >
-                  <Text style={[
-                    styles.categoryText,
-                    { 
-                      color: selectedCategories.includes(category) 
-                        ? colors.background 
-                        : colors.text,
-                      ...typography.tag
-                    }
-                  ]}>
-                    {category}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </Animated.View>
-
         <Animated.View 
           entering={FadeIn.delay(600).duration(600)} 
           style={styles.section}
@@ -345,6 +236,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 16,
+    paddingTop: 8,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
@@ -355,7 +247,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {},
+  title: {
+    paddingTop: 8,
+  },
   section: {
     marginTop: 32,
   },

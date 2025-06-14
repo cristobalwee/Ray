@@ -64,8 +64,8 @@ const HomeScreen: FC = () => {
             <Text style={[typography.title, styles.appTitle, { color: colors.text }]}>
               Ray<Text style={{ color: '#C6698B' }}>.</Text>
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-              <TouchableOpacity onPress={navigateToBookmarks} style={{ marginRight: 12 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+              <TouchableOpacity onPress={navigateToBookmarks}>
                 <Bookmark size={24} color={colors.text} />
               </TouchableOpacity>
               <TouchableOpacity onPress={navigateToSettings}>
@@ -76,7 +76,7 @@ const HomeScreen: FC = () => {
         </Animated.View>
 
         <Animated.View
-          entering={FadeInUp.delay(300).duration(600)}
+          entering={FadeIn.delay(150).duration(400)}
           style={styles.dateSection}
         >
           <View style={{ justifyContent: 'center', alignItems: 'center', gap: 12 }}>
@@ -105,7 +105,7 @@ const HomeScreen: FC = () => {
         {todaysReadings.map((reading, index) => (
           <Animated.View 
             key={reading.id}
-            entering={FadeInUp.delay(600 + (index * 200)).duration(600)}
+            entering={FadeIn.delay(300 + (index * 150)).duration(400)}
           >
             <TodayReadingCard 
               reading={reading} 
@@ -115,32 +115,45 @@ const HomeScreen: FC = () => {
         ))}
 
         <Animated.View 
-          entering={FadeInUp.delay(900).duration(600)}
+          entering={FadeIn.delay(600).duration(400)}
           style={[styles.previousSection, { marginTop: spacing.xl }]}
         >
-          <Text style={[styles.previousTitle, { 
-            color: colors.text,
-            ...typography.subheading,
-            marginBottom: spacing.md
-          }]}>
-            Previous Readings
-          </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
+            <Text style={[styles.previousTitle, { 
+              color: colors.text,
+              ...typography.subheading,
+            }]}>
+              Recent Readings
+            </Text>
+            { previousReadings.length > 0 && (
+              <TouchableOpacity onPress={() => router.push('/previous-readings')}>
+                <Text style={[styles.viewAllText, { 
+                  color: colors.text,
+                  ...typography.button,
+                }]}>
+                  View all
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
           {previousReadings.length > 0 ? (
-            previousReadings.map((reading, index) => (
-              <Animated.View 
-                key={reading.id}
-                entering={FadeInUp.delay(1000 + (index * 100)).duration(600)}
-              >
-                <PreviousReadingItem 
-                  reading={reading} 
-                  onPress={() => navigateToReading(reading.id)} 
-                />
-              </Animated.View>
-            ))
+            <>
+              {previousReadings.map((reading, index) => (
+                <Animated.View 
+                  key={reading.id}
+                  entering={FadeIn.delay(750 + (index * 150)).duration(400)}
+                >
+                  <PreviousReadingItem 
+                    reading={reading} 
+                    onPress={() => navigateToReading(reading.id)} 
+                  />
+                </Animated.View>
+              ))}
+            </>
           ) : (
             <Animated.View 
-              entering={FadeInUp.delay(1000).duration(600)}
+              entering={FadeIn.delay(900).duration(400)}
               style={[styles.emptyState, {
                 backgroundColor: colors.surfaceElevated,
                 borderRadius: borderRadius.md,
@@ -158,7 +171,6 @@ const HomeScreen: FC = () => {
                 color: colors.text,
                 ...typography.heading,
                 marginTop: spacing.lg,
-                marginBottom: spacing.xs,
               }]}>
                 Nothing yet
               </Text>
@@ -211,9 +223,6 @@ const styles = StyleSheet.create({
   previousSection: {
     marginTop: 32,
   },
-  previousTitle: {
-    marginBottom: 16,
-  },
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -228,6 +237,12 @@ const styles = StyleSheet.create({
   emptyTitle: {},
   emptySubtitle: {
     maxWidth: 200,
+  },
+  previousSubtitle: {
+    marginBottom: 8,
+  },
+  viewAllText: {
+    textDecorationLine: 'underline',
   },
 });
 

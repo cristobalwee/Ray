@@ -33,26 +33,28 @@ export default function CompletionCard({
       exiting={FadeOut}
       style={{ marginTop: 32, alignItems: 'center', width: '100%' }}
     >
-      <View style={{ backgroundColor: colors.surfaceElevated, borderRadius: 24, padding: 28, width: '100%', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 16, elevation: 8 }}>
-        <View style={{ backgroundColor: colors.surface, borderRadius: 999, width: 48, height: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-          <Check size={32} color={colors.primary} />
+      <View style={{ backgroundColor: colors.surface, borderRadius: 24, padding: 28, width: '100%', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 16, elevation: 8 }}>
+        <View style={{ backgroundColor: colors.cardAction, borderRadius: borderRadius.pill, width: 52, height: 52, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+          <Check size={28} color={colors.text} />
         </View>
-        <Text style={{ color: colors.text, ...typography.title, textAlign: 'center', marginBottom: 8 }}>You're done!</Text>
-        <Text style={{ color: colors.textSecondary, ...typography.caption, textAlign: 'center', marginBottom: 24 }}>Congrats on completing your {reading.day ? getOrdinal(reading.day) : ''} reading.</Text>
+        <View style={{ gap: 4 }}>
+          <Text style={{ color: colors.text, ...typography.heading, textAlign: 'center' }}>You're done!</Text>
+          <Text style={{ color: colors.textSecondary, ...typography.bodySmall, textAlign: 'center', marginBottom: 24 }}>Congrats on completing your {reading.day ? getOrdinal(reading.day) : ''} reading.</Text>
+        </View>
         <TouchableOpacity
-          style={{ backgroundColor: colors.primary, borderRadius: 12, paddingVertical: 14, alignItems: 'center', width: '100%', marginBottom: 12, flexDirection: 'row', justifyContent: 'center' }}
+          style={{ backgroundColor: colors.cardAction, borderRadius: 12, paddingVertical: 14, alignItems: 'center', width: '100%', marginBottom: 12, flexDirection: 'row', justifyContent: 'center' }}
           onPress={() => router.push('/home')}
         >
-          <HomeIcon size={20} color={colors.background} style={{ marginRight: 8 }} />
-          <Text style={{ color: colors.background, ...typography.button }}>Go back home</Text>
+          <HomeIcon size={20} color={colors.text} style={{ marginRight: 8 }} />
+          <Text style={{ color: colors.text, ...typography.button }}>Go back home</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ borderColor: colors.primary, borderWidth: 1, borderRadius: 12, paddingVertical: 14, alignItems: 'center', width: '100%', flexDirection: 'row', justifyContent: 'center', opacity: bookmarked ? 0.6 : 1 }}
+          style={{ borderColor: colors.border, borderWidth: 1, borderRadius: 12, paddingVertical: 14, alignItems: 'center', width: '100%', flexDirection: 'row', justifyContent: 'center', opacity: bookmarked ? 0.6 : 1 }}
           onPress={toggleBookmark}
           disabled={bookmarked}
         >
-          <BookmarkIcon size={20} color={colors.primary} style={{ marginRight: 8 }} />
-          <Text style={{ color: colors.primary, ...typography.button }}>{bookmarked ? 'Bookmarked' : 'Bookmark this reading'}</Text>
+          <BookmarkIcon size={20} color={colors.text} style={{ marginRight: 8 }} />
+          <Text style={{ color: colors.text, ...typography.button }}>{bookmarked ? 'Bookmarked' : 'Bookmark this reading'}</Text>
         </TouchableOpacity>
       </View>
     </Animated.View>

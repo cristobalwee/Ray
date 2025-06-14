@@ -17,6 +17,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { ReadingProvider } from '@/components/ReadingProvider';
 import Toast from 'react-native-toast-message';
+import toastConfig from '@/components/toastConfig';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -58,15 +59,11 @@ export default function RootLayout() {
           <Stack.Screen name="home" options={{ animation: 'fade' }} />
           <Stack.Screen name="settings" options={{ animation: 'slide_from_right' }} />
           <Stack.Screen name="bookmarks" options={{ animation: 'slide_from_right' }} />
-          <Stack.Screen name="reading/preview/[id]" options={{ 
-            animation: 'slide_from_bottom',
-            presentation: 'modal',
-          }} />
           <Stack.Screen name="reading/[id]" options={{ animation: 'slide_from_right' }} />
           <Stack.Screen name="reading/detail/[id]" options={{ animation: 'slide_from_right' }} />
         </Stack>
         <StatusBar style="light" />
-        <Toast />
+        <Toast config={toastConfig} />
       </ReadingProvider>
     </ThemeProvider>
   );
